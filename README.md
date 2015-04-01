@@ -1,0 +1,2 @@
+# bin
+my bin stuff
