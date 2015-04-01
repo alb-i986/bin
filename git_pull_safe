@@ -1,0 +1,86 @@
+#!/bin/bash
+#
+# Update the working copy in the current dir by pulling from origin or the given remote, to master.
+# Before pulling, stash any change in progress, and stash-pop it back once done, thus restoring
+# the original state of the working directory.
+#
+# It also handles any "abnormal" termination like CTRL-C: in such a case it will stash back.
+#
+# Usage: $0 [remote_name]
+# 
+# Detailed sequence of steps:
+#  - stash
+#  - co master
+#  - pull $REMOTE master
+#  - co $ORIGINAL_BRANCH
+#  - stash pop
+#
+
+DEFAULT_REMOTE=origin
+
+
+# internal vars
+[ -n "$1" ] && REMOTE=$1 || REMOTE=$DEFAULT_REMOTE
+STASHED=0
+
+trap "restore_git_state ; exit" SIGHUP SIGINT SIGTERM
+
+
+restore_git_state() {
+  git co "$ORIGINAL_BRANCH"
+  if [ "$STASHED" -eq 1 ] ; then
+    git stash pop
+    if [ $? -ne 0 ] ; then
+      ERR_GIT_STASH_POP=1
+    fi
+  fi
+  STASHED=0
+}
+
+save_git_state() {
+  ORIGINAL_BRANCH=$( git branch | grep '^*' | sed -r 's/^\*\s*//' )
+  stash_output=`git stash`
+  if [ "$stash_output" = "No local changes to save" ] ; then
+    STASHED=0
+  else
+    STASHED=1
+  fi
+}
+
+update_wc() {
+  git status &&
+  save_git_state &&
+  git co master &&
+  git pull "$REMOTE" master
+  if [ $? -ne 0 ] ; then
+    ERR_GIT_PULL=1
+  fi
+  restore_git_state
+}
+
+
+
+
+if [ ! -e ".git" ] ; then
+  echo "the current dir does not seem to be versioned with git"
+  exit 1
+fi
+
+update_wc
+
+
+
+## finally report any error that occured
+echo
+if [ -n "$ERR_GIT_PULL" ] ; then
+  echo " **** WARNING ****"
+  echo "errors occured during git pull"
+fi
+if [ -n "$ERR_GIT_STASH_POP" ] ; then
+  echo " **** WARNING ****"
+  echo "errors occured during git stash pop"
+fi
+
+echo
+
+exit 0
