@@ -52,6 +52,7 @@ git_restore_state || {
 
 # if this project contains submodules, recursively pull for each one of them
 if [ -e .gitmodules ] ; then
+  echo
   git submodule foreach $( basename $0 ) || { # recursive call
     ERR_GIT_SUBMODULE=1
   }
