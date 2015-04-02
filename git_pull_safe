@@ -3,6 +3,7 @@
 # Update master in the current dir by pulling from origin or the given remote.
 # Before pulling, stash any work in progress, and stash-pop it back once done, thus restoring
 # the original state of the working directory.
+# Can also handle git submodules: it will run itself for each one of them.
 #
 # It also handles any "abnormal" termination like CTRL-C: in such cases it will stash back.
 #
@@ -14,6 +15,7 @@
 #  - pull $REMOTE master
 #  - co $ORIGINAL_BRANCH
 #  - stash pop
+#  - repeat all of the above steps for each git submodule (if any)
 #
 
 # configurable vars
@@ -22,6 +24,7 @@ DEFAULT_REMOTE=origin
 
 # internal vars
 [ -n "$1" ] && REMOTE=$1 || REMOTE=$DEFAULT_REMOTE
+
 
 . $( dirname ${BASH_SOURCE[0]} )/git_functions.sh  || {
   echo -e "\n\tERR: cannot import git_functions.sh. Exiting\n"
@@ -35,6 +38,7 @@ if [ ! -e ".git" ] ; then
   exit 1
 fi
 
+
 git status &&
 git_save_state &&
 git co master &&
@@ -47,6 +51,14 @@ if [ $? -ne 0 ] ; then
   ERR_GIT_RESTORE=1
 fi
 
+# if this project contains submodules, recursively pull for each one of them
+if [ -e .gitmodules ] ; then
+  git submodule foreach $( basename $0 ) # recursive call
+  if [ $? -ne 0 ] ; then
+    ERR_GIT_SUBMODULE=1
+  fi
+fi
+
 
 ## finally report any error occured
 echo
@@ -57,6 +69,10 @@ fi
 if [ -n "$ERR_GIT_RESTORE" ] ; then
   echo " **** WARNING ****"
   echo "errors occured during git restore"
+fi
+if [ -n "$ERR_GIT_SUBMODULE" ] ; then
+  echo " **** WARNING ****"
+  echo "errors occured during 'git submodule foreach $( basename $0 )'"
 fi
 
 echo
