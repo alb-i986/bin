@@ -11,6 +11,11 @@ BASE_BRANCH_DEFAULT="master"
 
 [ -n "$1" ] && BASE_BRANCH=$1 || BASE_BRANCH=$BASE_BRANCH_DEFAULT
 
+if [ ! -e ".git" ] ; then
+  echo "the current dir is not versioned by git"
+  exit 1
+fi
+
 git_save_state
 
 # first checkout master for ease of parsing the name of the branches
