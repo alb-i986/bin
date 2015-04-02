@@ -42,10 +42,9 @@ fi
 git status &&
 git_save_state &&
 git co master &&
-git pull "$REMOTE" master
-if [ $? -ne 0 ] ; then
+git pull "$REMOTE" master || {
   ERR_GIT_PULL=1
-fi
+}
 git_restore_state
 if [ $? -ne 0 ] ; then
   ERR_GIT_RESTORE=1
