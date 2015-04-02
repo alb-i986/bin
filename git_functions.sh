@@ -24,7 +24,7 @@ git_restore_state() {
   if [ -n "$ORIGINAL_BRANCH" ] ; then
     git co "$ORIGINAL_BRANCH"
   fi
-  if [ "$STASHED" -eq 1 ] ; then
+  if [ "$STASHED" = 1 ] ; then
     git stash pop
     ret=$?
   fi
