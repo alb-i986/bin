@@ -18,7 +18,7 @@ fi
 
 git_save_state
 
-# first checkout master for ease of parsing the name of the branches
+# first checkout $BASE_BRANCH for ease of parsing the name of the branches
 # (otherwise in $branches we'd get the element '*')
 git co $BASE_BRANCH
 
@@ -49,3 +49,11 @@ done
 # finally switch back to the original checked out branch
 git_restore_state
 
+if [ -n "$FAILED_REBASES" ] ; then
+  echo -e "\n\nrebase failed for the following branches:"
+  for branch in $FAILED_REBASES ; do
+    echo " - $branch"
+  done
+fi
+
+exit 0
