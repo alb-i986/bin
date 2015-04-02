@@ -24,6 +24,7 @@ DEFAULT_REMOTE=origin
 
 # internal vars
 [ -n "$1" ] && REMOTE=$1 || REMOTE=$DEFAULT_REMOTE
+PROJECT=$( basename $PWD )
 
 
 . $( dirname ${BASH_SOURCE[0]} )/git_functions.sh  || {
@@ -59,19 +60,14 @@ fi
 
 ## finally report any error occured
 echo
-if [ -n "$ERR_GIT_PULL" ] ; then
-  echo " **** WARNING ****"
-  echo "errors occured during git pull"
-fi
-if [ -n "$ERR_GIT_RESTORE" ] ; then
-  echo " **** WARNING ****"
-  echo "errors occured during git restore"
-fi
-if [ -n "$ERR_GIT_SUBMODULE" ] ; then
-  echo " **** WARNING ****"
-  echo "errors occured during 'git submodule foreach $( basename $0 )'"
+if [[ -n "$ERR_GIT_PULL" || -n "$ERR_GIT_RESTORE" || -n "$ERR_GIT_SUBMODULE" ]] ; then
+  echo " **** WARNING **** some errs occured for project $PROJECT"
+  [ -n "$ERR_GIT_PULL" ] && echo "errors occured during git pull"
+  [ -n "$ERR_GIT_RESTORE" ] && echo "errors occured during git restore"
+  [ -n "$ERR_GIT_SUBMODULE" ] && echo "errors occured during 'git submodule foreach $( basename $0 )'"
+  echo
+  exit 1
+else
+  exit 0
 fi
 
-echo
-
-exit 0
