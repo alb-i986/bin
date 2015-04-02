@@ -26,9 +26,6 @@ DEFAULT_REMOTE=origin
 . $( dirname ${BASH_SOURCE[0]} )/git_functions.sh
 
 
-trap "git_restore_state ; exit" SIGHUP SIGINT SIGTERM
-
-
 if [ ! -e ".git" ] ; then
   echo "the current dir is not versioned by git"
   exit 1

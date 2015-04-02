@@ -1,5 +1,8 @@
 #!/bin/bash
+# functions about git
+# beware: by importing this file you get git_restore_state trapped
 
+trap "git_restore_state ; exit" SIGHUP SIGINT SIGTERM
 
 git_current_branch() {
   git rev-parse --abbrev-ref HEAD
