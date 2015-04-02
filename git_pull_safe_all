@@ -28,6 +28,7 @@ for PROJECTS_ROOT in $PROJECTS_ROOTS ; do
   ## loop over all of the subdirs in a root
   for PROJECT_DIR in $( find $PROJECTS_ROOT -maxdepth 1 -mindepth 1 -type d \! -name '.*' ) ; do
     PROJECT=$( basename "$PROJECT_DIR" )
+    clear
     echo -e "\nUpdating $PROJECT\n"
     cd "$PROJECT_DIR" &&
     git_pull_safe || {
