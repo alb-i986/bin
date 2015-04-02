@@ -45,17 +45,15 @@ git co master &&
 git pull "$REMOTE" master || {
   ERR_GIT_PULL=1
 }
-git_restore_state
-if [ $? -ne 0 ] ; then
+git_restore_state || {
   ERR_GIT_RESTORE=1
-fi
+}
 
 # if this project contains submodules, recursively pull for each one of them
 if [ -e .gitmodules ] ; then
-  git submodule foreach $( basename $0 ) # recursive call
-  if [ $? -ne 0 ] ; then
+  git submodule foreach $( basename $0 ) || { # recursive call
     ERR_GIT_SUBMODULE=1
-  fi
+  }
 fi
 
 
