@@ -23,7 +23,11 @@ DEFAULT_REMOTE=origin
 # internal vars
 [ -n "$1" ] && REMOTE=$1 || REMOTE=$DEFAULT_REMOTE
 
-. $( dirname ${BASH_SOURCE[0]} )/git_functions.sh
+. $( dirname ${BASH_SOURCE[0]} )/git_functions.sh  || {
+  echo -e "\n\tERR: cannot import git_functions.sh. Exiting\n"
+  exit 1
+}
+
 
 
 if [ ! -e ".git" ] ; then

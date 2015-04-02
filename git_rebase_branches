@@ -7,7 +7,13 @@
 BASE_BRANCH_DEFAULT="master"
 
 
-. $( dirname ${BASH_SOURCE[0]} )/git_functions.sh
+
+. $( dirname ${BASH_SOURCE[0]} )/git_functions.sh  || {
+  echo -e "\n\tERR: cannot import git_functions.sh. Exiting\n"
+  exit 1
+}
+
+
 
 [ -n "$1" ] && BASE_BRANCH=$1 || BASE_BRANCH=$BASE_BRANCH_DEFAULT
 
