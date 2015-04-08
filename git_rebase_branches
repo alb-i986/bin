@@ -32,8 +32,8 @@ branches=$( git branch | fgrep -v $BASE_BRANCH | xargs )
 
 for branch in $branches ; do
   clear
-  read -p "going to rebase $branch on top of $BASE_BRANCH. Skip? [n] ^C to abort " skip
-  if [ "$skip" = "y" ] ; then
+  read -p "rebase $branch on top of $BASE_BRANCH? [Y/N] " wanna_rebase
+  if [[ "$wanna_rebase" =~ ^[nN][oO]?$ ]] ; then
     continue
   fi
 
