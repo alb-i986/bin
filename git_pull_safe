@@ -36,7 +36,7 @@ PROJECT=$( basename $PWD )
 
 if [ ! -e ".git" ] ; then
   echo "the current dir is not versioned by git"
-  exit 1
+  exit 0
 fi
 
 
