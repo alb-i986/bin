@@ -21,8 +21,12 @@ git_save_state() {
 
 git_restore_state() {
   ret=0 # assume success
+  echo
   if [ -n "$ORIGINAL_BRANCH" ] ; then
-    git co "$ORIGINAL_BRANCH"
+    git co "$ORIGINAL_BRANCH" || {
+      echo "ERR: Failed to restore the original state of the working dir"
+      return 1
+    }
   fi
   if [ "$STASHED" = 1 ] ; then
     git stash pop
