@@ -28,8 +28,6 @@ In fact:
 - before pulling, it [stashes](https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning) any work in progress
 - after pulling, it checks out the branch you were previously working on, and stashes back your non-committed changes, thus restoring the original state of your working directory.
 
-At the end, it will print out a summary of the projects for which the update failed, if any.
-
 It can handle git submodules: it will run itself for each one of them.
 
 It handles any "abnormal" termination like CTRL-C: in such cases it will restore the original state of your working directory by checking out the original branch, and by stash-popping back.
@@ -52,7 +50,9 @@ git_pull_safe_all [PROJECTS_ROOT_1] [PROJECTS_ROOT_2] .. [PROJECTS_ROOT_n]
 ```
 
 Updates (by pulling) master for each project under each of the given project roots.
-By default (i.e. if no args are given), it updates all of the projects under '~/workspace'.
+By default (i.e. if no args are given), it updates all of the projects under `~/workspace`.
+
+At the end, it will print out a summary with the projects for which the operation failed, if any.
 
 It wraps `git_pull_safe`: see the corresponding paragraph for more details.
 
