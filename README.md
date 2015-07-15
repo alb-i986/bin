@@ -12,7 +12,7 @@ git clone https://github.com/alb-i986/bin.git
 echo "export PATH=~/bin:$PATH" >> ~/.bashrc
 ```
 
-## Usage
+## Git tasks
 
 ### git_pull_safe
 
