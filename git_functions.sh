@@ -10,7 +10,7 @@ git_current_branch() {
 
 git_save_state() {
   ORIGINAL_BRANCH=$( git_current_branch )
-  stash_output=`git stash`
+  stash_output=`git stash --include-untracked`
   # TODO improve "did an err occur?" logic -- should not be based on the exact string
   if [ "$stash_output" = "No local changes to save" ] ; then
     STASHED=0
