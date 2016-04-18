@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# reset the author (see man `git-commit`)` for all of the commits from
+# master (or `$1`) up to the current HEAD.
+#
+# Usage: `$0 [base_branch]`
+# 
+
+# configurable vars
+DEFAULT_BASE_BRANCH=master
+
+
+[ -n "$1" ] && BASE_BRANCH=$1 || BASE_BRANCH=$DEFAULT_BASE_BRANCH
+
+git rebase -i $BASE_BRANCH --exec "git commit --amend --reset-author --no-edit"
