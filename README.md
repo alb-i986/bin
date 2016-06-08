@@ -68,3 +68,24 @@ Rebases each local branch on top of master or the given base branch.
 The user can actually choose which branches to rebase at run-time.
 In fact, before performing each rebase, it will ask the user for a confirmation.
 
+### git_reset_author_all
+
+Reset the author (see `man git-commit`, reset-author) for all of the commits starting from master (or `$1`) up to HEAD.
+
+Usage:
+
+    git_reset_author_all [base_branch]
+    
+Warning: this is actually a rebase.
+
+### git_deploy2stash
+
+Pushes the current branch to origin and opens a Pull Request on Atlassian Stash.
+
+Before that:
+
+- update master by pulling from origin
+- rebase the current branch on top of the updated master
+- run `mvn install` to check that the build is good
+
+Pre-reqs: [Atlassian Stash Command Line Tools](http://blogs.atlassian.com/2012/11/stash-pull-requests-from-the-command-line/) needs to be installed.
