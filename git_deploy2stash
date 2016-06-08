@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Pushes the current branch to origin and opens a Pull Request on Atlassian Stash.
+#
+# Before that:
+#  - update master by pulling from origin
+#  - rebase the current branch on top of the updated master
+#  - run `mvn install` to check that the build is good
+#
+# Requires "Atlassian Stash Command Line Tools" to be installed.
+# See http://blogs.atlassian.com/2012/11/stash-pull-requests-from-the-command-line/
+#
+
+. $( dirname ${BASH_SOURCE[0]} )/git_functions.sh  || {
+  echo -e "\n\tERR: cannot import git_functions.sh. Exiting\n"
+  exit 1
+}
+
+if [ "$1" = "-skipTests" ] ; then
+  MVN_OPTS="-DskipTests"
+fi
+
+git_pull_safe &&
+git_save_state &&
+git rebase master &&
+mvn clean install -U $MVN_OPTS &&
+git push origin `git_current_branch` --set-upstream &&
+git create-pull-request master
+
+git_restore_state || {
+  echo "error while restoring the state (git-stash-pop)"
+}
