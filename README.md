@@ -30,6 +30,8 @@ In fact:
 
 It can handle git submodules: it will run itself for each one of them.
 
+Can also transparently handle git repos cloned with `git-svn`: instead of pulling it will run `git svn rebase`.
+
 It handles any "abnormal" termination like CTRL-C: in such cases it will restore the original state of your working directory by checking out the original branch, and by stash-popping back.
 
 
@@ -37,7 +39,7 @@ Detailed sequence of steps:
 
 - stash
 - co master
-- pull $REMOTE master
+- pull $REMOTE master (or `svn rebase`, if the repo was cloned from SVN)
 - co $ORIGINAL_BRANCH
 - stash pop
 - repeat all of the above steps for each git submodule (if any)
