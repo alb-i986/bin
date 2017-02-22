@@ -12,7 +12,7 @@
 # Detailed sequence of steps:
 #  - stash
 #  - co master
-#  - pull $REMOTE master
+#  - pull $REMOTE master (o `svn rebase`, if the repo is linked to an SVN server)
 #  - co $ORIGINAL_BRANCH
 #  - stash pop
 #  - repeat all of the above steps for each git submodule (if any)
@@ -31,6 +31,10 @@ PROJECT=$( basename $PWD )
   echo -e "\n\tERR: cannot import git_functions.sh. Exiting\n"
   exit 1
 }
+. $( dirname ${BASH_SOURCE[0]} )/common.sh || {
+  echo -e "\n\tERR: cannot import common.sh. Exiting\n"
+  exit 1
+}
 
 
 
@@ -42,10 +46,16 @@ fi
 
 git status &&
 git_save_state &&
-git co master &&
-git pull "$REMOTE" master || {
-  ERR_GIT_PULL=1
-}
+git co master || exit 1
+
+# can handle both a git repo cloned from SVN and a normal git repo linked to a git remote
+[ -f ".git/config" ] || err_exit "The file .git/config does not exist"
+if [ "$( grep -E '^\[svn-remote' .git/config | wc -l)" = "0" ] ; then
+  git pull "$REMOTE" master || ERR_GIT_PULL=1
+else
+  git svn rebase || ERR_GIT_PULL=1
+fi
+
 git_restore_state || {
   ERR_GIT_RESTORE=1
 }
