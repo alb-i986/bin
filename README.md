@@ -26,7 +26,7 @@ It is basically an advanced `git pull origin master`, allowing you to update mas
 In fact:
 
 - before pulling, it [stashes](https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning) any work in progress
-- after pulling, it checks out the branch you were previously working on, and stashes back your non-committed changes, thus restoring the original state of your working directory.
+- after pulling, it checks out the branch you were previously working on, and stashes back your non-committed changes, keeping the index as it was, thus restoring the original state of your working directory, including any files added to the index.
 
 It can handle git submodules: it will run itself for each one of them.
 
