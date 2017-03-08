@@ -20,10 +20,6 @@ git_save_state() {
 }
 
 git_restore_state() {
-  if [[ -z "$STASHED" || "$STASHED" = "0" ]] ; then
-    return 0
-  fi
-
   ret=0 # assume success
   echo
   if [ -n "$ORIGINAL_BRANCH" ] ; then
