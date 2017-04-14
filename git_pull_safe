@@ -12,7 +12,7 @@
 # Detailed sequence of steps:
 #  - stash
 #  - co master
-#  - pull $REMOTE master (o `svn rebase`, if the repo is linked to an SVN server)
+#  - pull $REMOTE master (or `svn rebase`, if the repo is linked to an SVN server)
 #  - co $ORIGINAL_BRANCH
 #  - stash pop
 #  - repeat all of the above steps for each git submodule (if any)
