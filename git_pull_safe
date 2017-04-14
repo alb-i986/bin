@@ -46,7 +46,7 @@ fi
 
 git status &&
 git_save_state &&
-git co master || exit 1
+git checkout master || exit 1
 
 # can handle both a git repo cloned from SVN and a normal git repo linked to a git remote
 [ -f ".git/config" ] || err_exit "The file .git/config does not exist"
