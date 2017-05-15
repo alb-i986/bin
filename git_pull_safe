@@ -49,11 +49,12 @@ git_save_state &&
 git checkout master || exit 1
 
 # can handle both a git repo cloned from SVN and a normal git repo linked to a git remote
+# If it has both an svn remote _and_ a git remote, git-svn wins
 [ -f ".git/config" ] || err_exit "The file .git/config does not exist"
-if [ "$( grep -E '^\[svn-remote' .git/config | wc -l)" = "0" ] ; then
-  git pull "$REMOTE" master || ERR_GIT_PULL=1
-else
+if [ "$( grep -E '^\[svn-remote' .git/config | wc -l)" -gt "0" ] ; then
   git svn rebase || ERR_GIT_PULL=1
+else
+  git pull "$REMOTE" master || ERR_GIT_PULL=1
 fi
 
 git_restore_state || {
